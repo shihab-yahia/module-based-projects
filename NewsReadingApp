@@ -1,0 +1,28 @@
+import requests
+from datetime import date, timedelta
+
+today = date.today()
+yesterday = today - timedelta(days=1)
+
+
+user = input("Which category of news do you want (sports/business/technology)? ")
+url = f"https://newsapi.org/v2/everything?q={user}&from={yesterday}&sortBy=popularity&apiKey=6e903f5022d04a5299f59a830563c612"
+response = requests.get(url)
+
+if user not in ["sports", "business", "technology"]:
+        print("Invalid category. Please choose from sports, business, or technology.")
+        exit()
+
+if response.status_code == 200:
+    res = response.json()
+    data = res.get("articles")
+
+    print("Fetching news articles...")
+    for article in data:
+        print(f"Title: {article['title']}")
+        print(f"Description: {article['description']}")
+        print(f"URL: {article['url']}\n")
+
+else:
+    print(f"Failed to retrieve news articles. Status code: {response.status_code}")
+    print("Please check your API key or the request parameters.")
